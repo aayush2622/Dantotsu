@@ -14,8 +14,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -90,6 +92,14 @@ class SettingsActivity : AppCompatActivity(), SimpleDialog.OnDialogResultListene
     private val extensionInstaller = Injekt.get<BasePreferences>().extensionInstaller()
     private var cursedCounter = 0
 
+    private lateinit var imageSwitcher: ImageView
+    private var imageIndex = 0
+    private val images = listOf(
+        R.drawable.discord_status_online,
+        R.drawable.discord_status_idle,
+        R.drawable.discord_status_dnd
+    )
+
     @OptIn(UnstableApi::class)
     @SuppressLint("SetTextI18n", "Recycle")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +109,23 @@ class SettingsActivity : AppCompatActivity(), SimpleDialog.OnDialogResultListene
         setContentView(binding.root)
 
         initActivity(this)
+
+        val imageSwitcher: ImageView = findViewById(R.id.imageSwitcher)
+        imageSwitcher.setImageResource(images[imageIndex])
+
+        val zoomInAnimation = AnimationUtils.loadAnimation(this, R.anim.bounce_zoom)
+        imageSwitcher.setOnClickListener {
+            val currentImageResourceId = images[imageIndex]
+            val status = when (currentImageResourceId) {
+                R.drawable.discord_status_online -> "online"
+                R.drawable.discord_status_idle -> "idle"
+                R.drawable.discord_status_dnd -> "dnd"
+                else -> "online"
+            }
+            PrefManager.setVal(PrefName.DiscordStatus, status)
+            imageIndex = (imageIndex + 1) % images.size
+            imageSwitcher.setImageResource(images[imageIndex])
+        }
 
         val openDocumentLauncher =
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
