@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import ani.dantotsu.R
-import ani.dantotsu.databinding.CurrentlyAiringWidgetConfigureBinding
+import ani.dantotsu.databinding.WidgetCurrentlyAiringConfigureBinding
 import ani.dantotsu.themes.ThemeManager
 
 /**
@@ -42,7 +42,7 @@ class CurrentlyAiringWidgetConfigureActivity : Activity() {
         setResult(RESULT_OK, resultValue)
         finish()
     }
-    private lateinit var binding: CurrentlyAiringWidgetConfigureBinding
+    private lateinit var binding: WidgetCurrentlyAiringConfigureBinding
 
     public override fun onCreate(icicle: Bundle?) {
 
@@ -53,7 +53,7 @@ class CurrentlyAiringWidgetConfigureActivity : Activity() {
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED)
 
-        binding = CurrentlyAiringWidgetConfigureBinding.inflate(layoutInflater)
+        binding = WidgetCurrentlyAiringConfigureBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         appWidgetText = binding.appwidgetText

@@ -69,7 +69,18 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/currently_airing_widget_info" />
+                android:resource="@xml/widget_info_currently_airing" />
+        </receiver>
+        <receiver
+            android:name=".widgets.StatsWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_stats" />
         </receiver>
         <receiver android:name=".notifications.IncognitoNotificationClickReceiver" />
 
@@ -340,6 +351,10 @@
 
         <service
             android:name=".widgets.CurrentlyAiringRemoteViewsService"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name=".widgets.StatsRemoteViewsService"
             android:exported="true"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service

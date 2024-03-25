@@ -810,4 +810,8 @@ Non quae tempore quo provident laudantium qui illo dolor vel quia dolor et exerc
     <string name="donate">donate :)</string>
     <string name="do_it">Do it!</string>
     <string name="password">Password</string>
+
+    <string name="anime_watched">Anime Watched</string>
+    <string name="manga_read">Manga Read</string>
+    <string name="loading">Loading…</string>
 </resources>

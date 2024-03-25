@@ -17,21 +17,20 @@ import ani.dantotsu.R
 
 /**
  * Implementation of App Widget functionality.
- * App Widget Configuration implemented in [CurrentlyAiringWidgetConfigureActivity]
  */
-class CurrentlyAiringWidget : AppWidgetProvider() {
+class StatsWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
         appWidgetIds.forEach { appWidgetId ->
-            val intent = Intent(context, CurrentlyAiringRemoteViewsService::class.java).apply {
+            val intent = Intent(context, StatsRemoteViewsService::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
             }
 
-            val rv = RemoteViews(context.packageName, R.layout.widget_currently_airing).apply {
+            val rv = RemoteViews(context.packageName, R.layout.widget_stats).apply {
                 setRemoteAdapter(R.id.widgetListView, intent)
                 setEmptyView(R.id.widgetListView, R.id.empty_view)
             }
@@ -64,10 +63,6 @@ class CurrentlyAiringWidget : AppWidgetProvider() {
             appWidgetId: Int,
             color: Int
         ) {
-            // Create an intent to launch the configuration activity when the widget is clicked
-            val intent = Intent(context, CurrentlyAiringWidgetConfigureActivity::class.java)
-            val pendingIntent =
-                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
             // Get the gradient drawable resource and update its start color with the user-selected color
             val gradientDrawable = ResourcesCompat.getDrawable(
@@ -78,21 +73,13 @@ class CurrentlyAiringWidget : AppWidgetProvider() {
             gradientDrawable.colors = intArrayOf(color, Color.GRAY) // End color is gray.
 
             // Create the RemoteViews object and set the background
-            val views = RemoteViews(context.packageName, R.layout.widget_currently_airing).apply {
+            val views = RemoteViews(context.packageName, R.layout.widget_stats).apply {
                 //setImageViewBitmap(R.id.backgroundView, convertDrawableToBitmap(gradientDrawable))
                 //setOnClickPendingIntent(R.id.backgroundView, pendingIntent)
             }
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
-
-        private fun convertDrawableToBitmap(drawable: Drawable): Bitmap {
-            val bitmap = Bitmap.createBitmap(100, 300, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            drawable.setBounds(0, 0, canvas.width, canvas.height)
-            drawable.draw(canvas)
-            return bitmap
         }
     }
 }
