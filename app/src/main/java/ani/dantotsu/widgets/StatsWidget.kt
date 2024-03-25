@@ -14,6 +14,7 @@ import android.net.Uri
 import android.widget.RemoteViews
 import androidx.core.content.res.ResourcesCompat
 import ani.dantotsu.R
+import ani.dantotsu.connections.anilist.Anilist
 
 /**
  * Implementation of App Widget functionality.
@@ -32,7 +33,8 @@ class StatsWidget : AppWidgetProvider() {
 
             val rv = RemoteViews(context.packageName, R.layout.widget_stats).apply {
                 setRemoteAdapter(R.id.widgetListView, intent)
-                setEmptyView(R.id.widgetListView, R.id.empty_view)
+                setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
+                setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
             }
 
             appWidgetManager.updateAppWidget(appWidgetId, rv)
@@ -64,18 +66,10 @@ class StatsWidget : AppWidgetProvider() {
             color: Int
         ) {
 
-            // Get the gradient drawable resource and update its start color with the user-selected color
-            val gradientDrawable = ResourcesCompat.getDrawable(
-                context.resources,
-                R.drawable.gradient_background,
-                null
-            ) as GradientDrawable
-            gradientDrawable.colors = intArrayOf(color, Color.GRAY) // End color is gray.
-
-            // Create the RemoteViews object and set the background
+            // Create the RemoteViews object and set the statistics
             val views = RemoteViews(context.packageName, R.layout.widget_stats).apply {
-                //setImageViewBitmap(R.id.backgroundView, convertDrawableToBitmap(gradientDrawable))
-                //setOnClickPendingIntent(R.id.backgroundView, pendingIntent)
+                setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
+                setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
             }
 
             // Instruct the widget manager to update the widget

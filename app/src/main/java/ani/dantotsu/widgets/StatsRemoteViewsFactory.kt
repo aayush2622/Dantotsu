@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import ani.dantotsu.R
+import ani.dantotsu.connections.anilist.Anilist
 import ani.dantotsu.getAppString
 import ani.dantotsu.util.Logger
 import java.io.InputStream
@@ -14,44 +15,21 @@ import java.net.URL
 
 class StatsRemoteViewsFactory(private val context: Context) :
     RemoteViewsService.RemoteViewsFactory {
-    private var widgetItems = mutableListOf<StatsWidgetItem>()
 
-    override fun onCreate() {
-        // 4 items for testing
-        widgetItems.clear()
-        Logger.log("StatsRemoteViewsFactory onCreate")
-        widgetItems = List(1) {
-            StatsWidgetItem(
-                getAppString(R.string.loading), getAppString(R.string.loading)
-            )
-        }.toMutableList()
-    }
+    override fun onCreate() { }
 
-    override fun onDataSetChanged() {
-        // 4 items for testing
-        Logger.log("StatsRemoteViewsFactory onDataSetChanged")
-        widgetItems.clear()
-        widgetItems.add(
-            StatsWidgetItem(
-                getAppString(R.string.loading), getAppString(R.string.loading)
-            )
-        )
-    }
+    override fun onDataSetChanged() { }
 
-    override fun onDestroy() {
-        widgetItems.clear()
-    }
+    override fun onDestroy() { }
 
     override fun getCount(): Int {
-        return widgetItems.size
+        return 1
     }
 
     override fun getViewAt(position: Int): RemoteViews {
-        Logger.log("StatsRemoteViewsFactory getViewAt")
-        val item = widgetItems[position]
         val rv = RemoteViews(context.packageName, R.layout.widget_stats).apply {
-            setTextViewText(R.id.animeWatched, item.readCount)
-            setTextViewText(R.id.mangaRead, item.watchedCount)
+            setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
+            setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
         }
 
         return rv
@@ -73,5 +51,3 @@ class StatsRemoteViewsFactory(private val context: Context) :
         return true
     }
 }
-
-data class StatsWidgetItem(val watchedCount: String, val readCount: String)
