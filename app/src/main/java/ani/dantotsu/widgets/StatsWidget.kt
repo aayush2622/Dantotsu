@@ -15,6 +15,11 @@ import android.widget.RemoteViews
 import androidx.core.content.res.ResourcesCompat
 import ani.dantotsu.R
 import ani.dantotsu.connections.anilist.Anilist
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import tachiyomi.core.util.lang.launchIO
 
 /**
  * Implementation of App Widget functionality.
@@ -54,16 +59,26 @@ class StatsWidget : AppWidgetProvider() {
             appWidgetId: Int
         ) {
 
-            // Create the RemoteViews object and set the statistics
-            val views = RemoteViews(context.packageName, R.layout.widget_stats).apply {
-                setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
-                setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
-                setTextViewText(R.id.episodesWatched, Anilist.episodesWatched.toString())
-                setTextViewText(R.id.chaptersRead, Anilist.chapterRead.toString())
-            }
+            val views = RemoteViews(context.packageName, R.layout.widget_stats)
+            launchIO {
+                val respond = if (Anilist.userid != null && Anilist.userid != -1)
+                    Anilist.query.getUserProfile(Anilist.userid!!)
+                else if (Anilist.username != null)
+                    Anilist.query.getUserProfile(Anilist.username!!) else null
+                respond?.data?.user?.let { user ->
+                    withContext(Dispatchers.Main) {
+                        views.setTextViewText(R.id.animeWatched,
+                            user.statistics.anime.count.toString()
+                        )
+                        views.setTextViewText(R.id.mangaRead, user.statistics.manga.count.toString())
+                        views.setTextViewText(R.id.episodesWatched, user.statistics.anime.episodesWatched.toString())
+                        views.setTextViewText(R.id.chaptersRead, user.statistics.manga.chaptersRead.toString())
 
-            // Instruct the widget manager to update the widget
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+                        // Instruct the widget manager to update the widget
+                        appWidgetManager.updateAppWidget(appWidgetId, views)
+                    }
+                }
+            }
         }
     }
 }

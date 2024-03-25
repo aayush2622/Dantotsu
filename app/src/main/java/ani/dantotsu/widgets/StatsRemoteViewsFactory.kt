@@ -9,6 +9,11 @@ import ani.dantotsu.R
 import ani.dantotsu.connections.anilist.Anilist
 import ani.dantotsu.getAppString
 import ani.dantotsu.util.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import tachiyomi.core.util.lang.launchIO
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -27,14 +32,7 @@ class StatsRemoteViewsFactory(private val context: Context) :
     }
 
     override fun getViewAt(position: Int): RemoteViews {
-        val rv = RemoteViews(context.packageName, R.layout.widget_stats).apply {
-            setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
-            setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
-            setTextViewText(R.id.episodesWatched, Anilist.episodesWatched.toString())
-            setTextViewText(R.id.chaptersRead, Anilist.chapterRead.toString())
-        }
-
-        return rv
+        return RemoteViews(context.packageName, R.layout.widget_stats)
     }
 
     override fun getLoadingView(): RemoteViews {
