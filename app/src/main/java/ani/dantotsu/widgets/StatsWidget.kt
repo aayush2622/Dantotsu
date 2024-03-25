@@ -26,18 +26,7 @@ class StatsWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         appWidgetIds.forEach { appWidgetId ->
-            val intent = Intent(context, StatsRemoteViewsService::class.java).apply {
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
-            }
-
-            val rv = RemoteViews(context.packageName, R.layout.widget_stats).apply {
-                setRemoteAdapter(R.id.widgetListView, intent)
-                setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
-                setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
-            }
-
-            appWidgetManager.updateAppWidget(appWidgetId, rv)
+            updateAppWidget(context, appWidgetManager, appWidgetId)
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds)
     }
@@ -62,14 +51,15 @@ class StatsWidget : AppWidgetProvider() {
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
-            appWidgetId: Int,
-            color: Int
+            appWidgetId: Int
         ) {
 
             // Create the RemoteViews object and set the statistics
             val views = RemoteViews(context.packageName, R.layout.widget_stats).apply {
                 setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
                 setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
+                setTextViewText(R.id.episodesWatched, Anilist.episodesWatched.toString())
+                setTextViewText(R.id.chaptersRead, Anilist.chapterRead.toString())
             }
 
             // Instruct the widget manager to update the widget

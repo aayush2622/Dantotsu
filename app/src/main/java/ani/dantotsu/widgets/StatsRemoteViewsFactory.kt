@@ -30,6 +30,8 @@ class StatsRemoteViewsFactory(private val context: Context) :
         val rv = RemoteViews(context.packageName, R.layout.widget_stats).apply {
             setTextViewText(R.id.animeWatched, Anilist.episodesWatched.toString())
             setTextViewText(R.id.mangaRead, Anilist.chapterRead.toString())
+            setTextViewText(R.id.episodesWatched, Anilist.episodesWatched.toString())
+            setTextViewText(R.id.chaptersRead, Anilist.chapterRead.toString())
         }
 
         return rv
